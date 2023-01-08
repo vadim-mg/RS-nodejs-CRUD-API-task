@@ -1,0 +1,1 @@
+In production mode you need copy .env.example to .env and configure your settings.
