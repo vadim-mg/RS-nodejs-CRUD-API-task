@@ -1,7 +1,9 @@
-import { User, StoredUser } from "./user.js";
+import { User, StoredUser, getUserFieldsError } from "./user.js";
 import { v4 as uuidv4 } from 'uuid';
+import { ApiError } from "../exceptions/api-error.js";
+import { ERROR } from "../utils/constants.js";
 
-export class Users {
+class Users {
 
   list: StoredUser[]
 
@@ -18,6 +20,10 @@ export class Users {
   }
 
   add(user: User): StoredUser {
+    const userHasError = getUserFieldsError(user)
+    if (userHasError) {
+      throw new ApiError(ERROR._400, userHasError + '')
+    }
     this.list.push({ id: uuidv4(), ...user })
     return this.list[this.list.length - 1]
   }
@@ -55,3 +61,7 @@ export class Users {
       })
   }
 }
+
+const users = new Users()
+
+export { users }
