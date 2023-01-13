@@ -9,6 +9,16 @@ const user1 = { username: 'Felix', age: 23, hobbies: [] }
 const user2 = { username: 'Max', age: 31, hobbies: ['music', 'art'] }
 let userID = NIL
 
+describe('User API tests (404) ', () => {
+
+  it("Incorrect route: 404", async () => {
+    return request(server).get(ENDPOINT+'ssss')
+      .then(response => {
+        expect(response.status).toBe(404)
+      })
+  })
+
+})
 
 describe('User API tests (addUser) ', () => {
 
@@ -66,14 +76,14 @@ describe('User API tests (GetUser/GetUsers)', () => {
       })
   })
 
-  it("GetWrongUser from DB (Error400)", async () => {
+  it("Get User with incorrect ID from DB (Error400)", async () => {
     return request(server).get(`${ENDPOINT}/xxx${userID}`)
       .then(response => {
         expect(response.status).toBe(400)
       })
   })
 
-  it("GetWrongUser from DB(Error404)", async () => {
+  it("Get not existing User from DB(Error404)", async () => {
     return request(server).get(`${ENDPOINT}/${userID.slice(0, -5)}a098a`)
       .then(response => {
         expect(response.status).toBe(404)
