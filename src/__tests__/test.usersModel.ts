@@ -1,11 +1,8 @@
 import { jest, describe, expect, test } from '@jest/globals';
 import { StoredUser } from '../models/user';
-import { Users } from '../models/users';
+import { users } from '../models/users';
 
 jest.useFakeTimers();
-
-const users = new Users()
-const users2 = new Users()
 
 const user1: StoredUser = users.add({ username: 'Felix', age: 23, hobbies: [] })
 test('addUser1', () => {
@@ -14,6 +11,7 @@ test('addUser1', () => {
   expect(user1.age).toStrictEqual(23);
   expect(user1.hobbies).toStrictEqual([]);
 });
+
 
 const user2: StoredUser = users.add({ username: 'Max', age: 45, hobbies: ['music', 'art'] })
 test('addUser2', () => {
@@ -25,7 +23,6 @@ test('addUser2', () => {
 
 test('getUsers', () => {
   expect(users.getAll()).toHaveLength(2)
-  expect(users2.getAll()).toHaveLength(0)
 })
 
 test('getOneUser', () => {
