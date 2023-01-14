@@ -51,7 +51,8 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
   user.hobbies = parsedData.hobbies ?? user.hobbies
 
   const updatedRecord = users.update(user)
-  return updatedRecord ? sendData(SUCCESS._200, updatedRecord, res) : null
+  if (updatedRecord)
+    sendData(SUCCESS._200, updatedRecord, res)
 }
 
 const deleteUser = async (req: IncomingMessage, res: ServerResponse, id: string) => {

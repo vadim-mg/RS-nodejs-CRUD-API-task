@@ -8,8 +8,6 @@ export const errorController = (res: ServerResponse, error: Error) => {
     ? error
     : new ApiError(ERROR._500)
 
-  console.log(`Error-${sendingError.status}: ${sendingError.message}`)
-
   res.writeHead(sendingError.status);
   res.end(sendingError.message);
 }

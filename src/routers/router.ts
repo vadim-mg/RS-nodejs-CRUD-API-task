@@ -5,21 +5,17 @@ import { ApiError } from "../exceptions/api-error.js";
 import { ERROR } from "../utils/constants.js";
 import { validate } from "uuid";
 
-const normUrl = (str?: string): string =>
-  str?.endsWith('/') ? str.slice(0, -1) : (str ?? '')
-
-const getParams = (str: string): string => {
-  const params = str.split('/')[3] ?? ''
-  return params.startsWith('/') ? params.slice(1) : params
-}
-
 const router = async (req: IncomingMessage, res: ServerResponse) => {
-  const uri = normUrl(req.url)
-  const uuid = getParams(uri)
+
+  const url = req.url ?? ''
+  const uri = url.endsWith('/') ? url.slice(0, -1) : url
+  const uuid = uri.split('/')[3] ?? ''
+
   if (uuid && !validate(uuid)) {
     throw new ApiError(ERROR._400, 'userId is invalid (not uuid)')
   }
-  switch (`${req.method ?? ''}:${uri}`) {
+
+  switch (`${req.method}:${uri}`) {
     case `GET:${ENDPOINT}`:
       return userController.getUsers(req, res)
     case `GET:${ENDPOINT}/${uuid}`:

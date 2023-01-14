@@ -8,7 +8,6 @@ const DOMAIN = process.env.domain ?? 'http://localhost'
 
 type HttpResponse = { code: number, message: string }
 
-// const ERROR: { [key: string]: HttpResponse } = {
 const ERROR = {
   _400: { code: 400, message: 'Bad Request' },
   _404: { code: 404, message: 'Not Found' },

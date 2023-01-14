@@ -25,10 +25,10 @@ const checkField = (
     return `${fieldName} not found`
   if ((isArray && !Array.isArray(field)) || (!isArray && typeof field !== fieldType))
     return `${fieldName} must be ${fieldType}`
-  if (options.minLength && field.length < options.minLength)
+  if (options.minLength !== undefined && (field.length < options.minLength))
     return `${fieldName} must be more ${options.minLength} character`
-  if (options.minValue && field < options.minValue)
-    return `${fieldName} must be more ${options.minValue} character`
+  if (options.minValue !== undefined && (field < options.minValue))
+    return `${fieldName} must be more ${options.minValue}`
   if (
     options.typeOfArray &&
     isArray &&
