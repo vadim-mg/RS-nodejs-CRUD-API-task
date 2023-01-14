@@ -13,26 +13,45 @@ const getUsers = async (req: IncomingMessage, res: ServerResponse) => {
   return sendData(SUCCESS._200, users.getAll(), res);
 }
 
-const getUser = async (req: IncomingMessage, res: ServerResponse, id: string) => {
+const findUser = async (id: string) => {
   const user = users.get(id)
-  if (user) {
-    return sendData(SUCCESS._200, user, res)
-  }
-  throw new ApiError(ERROR._404, `User id:${id} doesn't exist`)
+  if (!user)
+    throw new ApiError(ERROR._404, `User id:${id} doesn't exist`)
+  return user
 }
 
-const addUser = async (req: IncomingMessage, res: ServerResponse) => {
-  let rawData = ''
-  for await (const chunk of req) {
-    rawData += chunk
-  }
-  let parsedData
+const parseUserFromBody = async (req: IncomingMessage) => {
   try {
-    parsedData = JSON.parse(rawData)
+    let rawData = ''
+    for await (const chunk of req) {
+      rawData += chunk
+    }
+    return JSON.parse(rawData)
   } catch {
     throw new ApiError(ERROR._400, 'Parsing error! Invalid input data!')
   }
+}
+
+const getUser = async (req: IncomingMessage, res: ServerResponse, id: string) => {
+  const user = await findUser(id)
+  return sendData(SUCCESS._200, user, res)
+}
+
+const addUser = async (req: IncomingMessage, res: ServerResponse) => {
+  const parsedData = await parseUserFromBody(req)
   return sendData(SUCCESS._201, users.add(parsedData), res)
 }
 
-export { getUsers, addUser, getUser }
+const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string) => {
+  const user = await findUser(id)
+  const parsedData = await parseUserFromBody(req)
+
+  user.username = parsedData.username ?? user.username
+  user.age = parsedData.age ?? user.age
+  user.hobbies = parsedData.hobbies ?? user.hobbies
+
+  const updatedRecord = users.update(user)
+  return updatedRecord ? sendData(SUCCESS._200, updatedRecord, res) : null
+}
+
+export { getUsers, addUser, getUser, updateUser }

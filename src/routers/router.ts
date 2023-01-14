@@ -16,7 +16,7 @@ const getParams = (str: string): string => {
 const router = async (req: IncomingMessage, res: ServerResponse) => {
   const uri = normUrl(req.url)
   const uuid = getParams(uri)
-  if(uuid && !validate(uuid)){
+  if (uuid && !validate(uuid)) {
     throw new ApiError(ERROR._400, 'userId is invalid (not uuid)')
   }
   switch (`${req.method ?? ''}:${uri}`) {
@@ -26,6 +26,8 @@ const router = async (req: IncomingMessage, res: ServerResponse) => {
       return userController.getUser(req, res, uuid)
     case `POST:${ENDPOINT}`:
       return userController.addUser(req, res)
+    case `PUT:${ENDPOINT}/${uuid}`:
+      return userController.updateUser(req, res, uuid)
     default:
       throw new ApiError(ERROR._404, 'incorrect route')
   }
