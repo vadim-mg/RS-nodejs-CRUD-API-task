@@ -121,8 +121,38 @@ describe('User API tests (Update)', () => {
         expect(response.status).toStrictEqual(404)
       })
   })
-  it("Update user with wrong nomber returns 400 ", async () => {
+  it("Update user with wrong number returns 400 ", async () => {
     return request(server).put(`${ENDPOINT}/wrong-id-a098a`)
+      .send({ age: 75 })
+      .then(response => {
+        expect(response.status).toStrictEqual(400)
+      })
+  })
+})
+
+describe('User API tests (Delete)', () => {
+  it("Delete user1 ", async () => {
+    return request(server).delete(`${ENDPOINT}/${userID}`)
+      .send({ username: "changedUser1", hobbies: ['running'] })
+      .then(response => {
+        expect(response.status).toStrictEqual(204)
+      })
+  })
+  it("Check deleted user", async () => {
+    return request(server).get(`${ENDPOINT}/${userID}`)
+    .then(response => {
+      expect(response.status).toStrictEqual(404)
+    })
+  })
+  it("Delete non-exist user returns 404 ", async () => {
+    return request(server).delete(`${ENDPOINT}/${userID.slice(0, -5)}a098a`)
+      .send({ age: 65 })
+      .then(response => {
+        expect(response.status).toStrictEqual(404)
+      })
+  })
+  it("Delete user with wrong number returns 400 ", async () => {
+    return request(server).delete(`${ENDPOINT}/wrong-id-a098a`)
       .send({ age: 75 })
       .then(response => {
         expect(response.status).toStrictEqual(400)
