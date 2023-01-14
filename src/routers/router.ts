@@ -8,9 +8,9 @@ import { validate } from "uuid";
 const normUrl = (str?: string): string =>
   str?.endsWith('/') ? str.slice(0, -1) : (str ?? '')
 
-const getParams = (srt: string): string => {
-  const params = srt.replace(ENDPOINT, '')
-  return params.length ? params.slice(1) : ''
+const getParams = (str: string): string => {
+  const params = str.split('/')[3] ?? ''
+  return params.startsWith('/') ? params.slice(1) : params
 }
 
 const router = async (req: IncomingMessage, res: ServerResponse) => {
@@ -27,7 +27,7 @@ const router = async (req: IncomingMessage, res: ServerResponse) => {
     case `POST:${ENDPOINT}`:
       return userController.addUser(req, res)
     default:
-      throw new ApiError(ERROR._404)
+      throw new ApiError(ERROR._404, 'incorrect route')
   }
 }
 
