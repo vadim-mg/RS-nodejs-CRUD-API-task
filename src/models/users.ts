@@ -1,5 +1,5 @@
 import { User, StoredUser, getUserFieldsError } from "./user.js";
-import { v4 as uuidv4 } from 'uuid';
+import { NIL, v4 as uuidv4 } from 'uuid';
 import { ApiError } from "../exceptions/api-error.js";
 import { ERROR } from "../utils/constants.js";
 
@@ -52,6 +52,8 @@ class Users {
   }
 
   delete(id: string): StoredUser | null {
+    if (process.env.NODE_ENV === 'test')
+      this.testInternalError(id)
     return this.findAndDoFunc(
       id,
       (i: number) => {
@@ -59,6 +61,15 @@ class Users {
         this.list.splice(i, 1)
         return user
       })
+  }
+
+  testInternalError(id: string) {
+    // in test environment Errors on the server side that occur 
+    // during the processing of a request should be handled and processed 
+    // correctly (server should answer with status code 500 and 
+    // corresponding human-friendly message)
+    if (id === NIL)
+      throw new Error('internal test system error')
   }
 }
 
