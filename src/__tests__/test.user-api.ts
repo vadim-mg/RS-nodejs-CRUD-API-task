@@ -12,7 +12,7 @@ let userID = NIL
 describe('User API tests (404) ', () => {
 
   it("Incorrect route: 404", async () => {
-    return request(server).get(ENDPOINT+'ssss')
+    return request(server).get(ENDPOINT + 'ssss')
       .then(response => {
         expect(response.status).toBe(404)
       })
@@ -87,6 +87,45 @@ describe('User API tests (GetUser/GetUsers)', () => {
     return request(server).get(`${ENDPOINT}/${userID.slice(0, -5)}a098a`)
       .then(response => {
         expect(response.status).toBe(404)
+      })
+  })
+})
+
+
+describe('User API tests (Update)', () => {
+  it("Update user1 ", async () => {
+    return request(server).put(`${ENDPOINT}/${userID}`)
+      .send({ username: "changedUser1", hobbies: ['running'] })
+      .then(response => {
+        expect(response.status).toStrictEqual(200)
+      })
+  })
+  it("Update user1 ", async () => {
+    return request(server).put(`${ENDPOINT}/${userID}`)
+      .send({ age: 55 })
+      .then(response => {
+        expect(response.status).toStrictEqual(200)
+      })
+  })
+  it("Check updated user", async () => {
+    return request(server).get(`${ENDPOINT}/${userID}`)
+    .then(response => {
+      expect(response.status).toStrictEqual(200)
+      expect(response.body.age).toStrictEqual(55)
+    })
+  })
+  it("Update non-exist user returns 404 ", async () => {
+    return request(server).put(`${ENDPOINT}/${userID.slice(0, -5)}a098a`)
+      .send({ age: 65 })
+      .then(response => {
+        expect(response.status).toStrictEqual(404)
+      })
+  })
+  it("Update user with wrong nomber returns 400 ", async () => {
+    return request(server).put(`${ENDPOINT}/wrong-id-a098a`)
+      .send({ age: 75 })
+      .then(response => {
+        expect(response.status).toStrictEqual(400)
       })
   })
 })
