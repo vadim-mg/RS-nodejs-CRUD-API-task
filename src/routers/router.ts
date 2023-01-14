@@ -28,6 +28,8 @@ const router = async (req: IncomingMessage, res: ServerResponse) => {
       return userController.addUser(req, res)
     case `PUT:${ENDPOINT}/${uuid}`:
       return userController.updateUser(req, res, uuid)
+    case `DELETE:${ENDPOINT}/${uuid}`:
+      return userController.deleteUser(req, res, uuid)
     default:
       throw new ApiError(ERROR._404, 'incorrect route')
   }

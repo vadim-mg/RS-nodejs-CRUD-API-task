@@ -54,4 +54,11 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
   return updatedRecord ? sendData(SUCCESS._200, updatedRecord, res) : null
 }
 
-export { getUsers, addUser, getUser, updateUser }
+const deleteUser = async (req: IncomingMessage, res: ServerResponse, id: string) => {
+  const user = users.delete(id)
+  if (!user)
+    throw new ApiError(ERROR._404, `User id:${id} doesn't exist`)
+  return sendData(SUCCESS._204, user, res)
+}
+
+export { getUsers, addUser, getUser, updateUser, deleteUser }
