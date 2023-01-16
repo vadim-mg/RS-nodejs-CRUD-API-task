@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:dev": "npx nodemon",
+    "start:dev": "npx nodemon --exec ts-node --esm src/index.ts",
     "start:prod": "npm run build && node build/index.js",
+    "start:multi": "npm run build && node build/cluster.js",
     "build": "node clean.js && npx tsc --build --verbose",
     "test": "jest",
     "test:api": "jest test.user-api.ts --watchAll",
